@@ -1,0 +1,53 @@
+
+//Obtenir la position des joueurs
+var enemy = getEnemies()[0]
+var me = getEntity()
+var enemy_cell = getCell(enemy)
+
+//Obtenir mes caractéristiques pour le tour
+var my_TP = getTP(me)
+var weapon_TP = getWeaponCost(WEAPON_PISTOL)
+var protein_TP = getChipCost(CHIP_PROTEIN)
+var protein_cooldown = getCooldown(CHIP_PROTEIN)
+
+//Je m'équipe si je n'ai pas d'arme
+if (getWeapon(me) != WEAPON_PISTOL) {
+    setWeapon(WEAPON_PISTOL)
+}
+
+//Si le CD est OK, je me boost
+if ( getCooldown(CHIP_PROTEIN) > 0 ) {
+    debug("il reste " + protein_cooldown + " tours !") 
+} else {
+    useChip(CHIP_PROTEIN, me)
+    my_TP -= protein_TP
+    debug("Proteine activé")
+}
+
+//J'avance pas à pas vers l'ennemie dans que je ne peux pas l'attaquer
+while (canUseWeapon(enemy) == false and getMP() != 0) {
+    moveToward(enemy,1)
+    debug("il reste " + getMP())
+}
+
+//Si je peux l'attaquer : j'attaque tant qu'il me reste assez de TP
+//Je pense qu'il y a redondance sur le if(canUseWeapon) ici et le while en haut
+//A TRAVAILLER
+if (canUseWeapon(enemy)){
+    debug("je peux attaqué")
+    while (my_TP >= weapon_TP) {
+        useWeapon(enemy)
+        my_TP -= weapon_TP
+        debug("il me reste " + my_TP)
+    } 
+//Sinon je me soigne : mais j'avais fait ça avant le pas à pas plus haut
+//Je pense que je vais devoir réfléchirà nouveau pour regrouper tout ça
+} else {
+    debug("je ne peux pas attaquer")
+    useChip(CHIP_BANDAGE, me)
+}
+
+useChip(CHIP_HELMET, me)
+//Finalement, s'il me reste des PM, je m'enfuie
+moveAwayFrom(enemy)
+
