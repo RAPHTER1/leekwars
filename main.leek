@@ -3,6 +3,7 @@
 var enemy = getEnemies()[0]
 var me = getEntity()
 var enemy_cell = getCell(enemy)
+var me_cell = getCell(me)
 
 //Obtenir mes caractéristiques pour le tour
 var my_TP = getTP(me)
@@ -49,5 +50,5 @@ if (canUseWeapon(enemy)){
 
 useChip(CHIP_HELMET, me)
 //Finalement, s'il me reste des PM, je m'enfuie
-moveAwayFrom(enemy)
-
+me_cell = getCell(me)
+moveAwayFromLine(enemy_cell, me_cell)
