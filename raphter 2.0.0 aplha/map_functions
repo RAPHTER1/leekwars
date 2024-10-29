@@ -1,0 +1,52 @@
+
+/* CREATE A LIST MAP WITH THE STRUCTURES OF ALL CELLS ON THE MAP AND THEIR NEIGHBORS
+[
+id = (INTEGER [0-612])
+x = cell x (INTEGER)
+y = cell y (INTEGER)
+neighbors = 1, 2 or 4 neighbors (ARRAY)
+]
+*/
+
+function get_map_cells_structure() {
+    var map_cells = []
+
+    //CREATE MAP LINE LINE BY LINE FROM ZERO TO HERO
+    for (var i = 0 ; i <= 612 ; i++) {
+        var cell = ['id': i, 'x': getCellX(i), 'y': getCellY(i)] //
+        push(map_cells,cell)
+    }
+
+    for (var cells in map_cells) {
+        var cell_id = cells['id']
+        var x = cells['x']
+        var y = cells['y']
+
+        //Je crée une matrice avec les vecteurs de déplacements si tu es un voisin
+        var neighbors = [
+            [-1, 0], // gauche
+            [1, 0],  // droite
+            [0, 1],  // haut
+            [0, -1]  // bas
+        ];
+
+        var neighbors_list = []             //je crée une liste pour ranger les voisins
+
+        for (var i = 0 ; i < count(neighbors) ; i++) {
+            var dx = neighbors[i][0]            //variation en x
+            var dy = neighbors[i][1]            //variation en y
+            var x2 = x + dx                     //calcule du nouveau x après déplacement
+            var y2 = y + dy                     //calcule du nouveau y après déplacement
+            var cell2 = getCellFromXY(x2, y2)   //nouvelle cellule
+
+            //Si la nouvelle cellule existe ET si elle est pas un obstacle
+            if ((abs(x2) + abs(y2) <= 17) and (isObstacle(cell2) == false)) {
+                push(neighbors_list, cell2)  //ajoute liste voisin
+            }
+        }
+
+        mapPut(cells, 'neighbors', neighbors_list)
+    }
+
+    return map_cells
+}

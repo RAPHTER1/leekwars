@@ -1,0 +1,9 @@
+include("map_functions")
+
+global __map_cells = get_map_cells_structure()
+
+debug(__map_cells)
+debug(__map_cells[0])
+debug(__map_cells[1])
+debug(__map_cells[107])
+mark(__map_cells[107]['neighbors'])
