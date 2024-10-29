@@ -2,8 +2,60 @@ include("map_functions")
 
 global __map_cells = get_map_cells_structure()
 
-debug(__map_cells)
-debug(__map_cells[0])
-debug(__map_cells[1])
-debug(__map_cells[107])
-mark(__map_cells[107]['neighbors'])
+//debug(__map_cells)
+//debug(__map_cells[0])
+//debug(__map_cells[1])
+//debug(__map_cells[107])
+//mark(__map_cells[107]['neighbors'])
+//debug(typeOf(__map_cells))
+
+//var list = [1,2]
+//debug(typeOf(list))
+
+//PENSER A VERIFIER QUEL TOUR ON EST CA PEUT EVITER TROP DE CALCULE ?
+
+function get_Movable_Cells(entity) {
+
+    var entity_mp = getMP(entity)
+    var entity_cell = getCell(entity)
+    var movable_cells = [entity_cell]
+
+    for (var i = 1 ; i <= entity_mp ; i++) {
+
+        var new_cells_list = []
+
+        for (var cells in movable_cells) {
+
+            var temporary_cells_list = []
+            var cells_neighbors = __map_cells[cells]['neighbors']
+
+            for (var temporary_neighbors in cells_neighbors) {
+                    push(temporary_cells_list, temporary_neighbors)
+            }
+            
+            for (var temporary_cells in temporary_cells_list) {
+                if(not inArray(new_cells_list, temporary_cells)) {
+                    push(new_cells_list, temporary_cells)
+                }
+            } 
+        }
+
+        for (var new_cells in new_cells_list) {
+            if(not inArray(movable_cells, new_cells)) {
+                push(movable_cells, new_cells)
+            }
+        }
+    }
+
+    return movable_cells
+}
+
+var me = getEntity()
+
+var me_movable_cells = get_Movable_Cells(me)
+
+for (var color_cell in me_movable_cells) {
+    mark(color_cell)
+}
+
+moveToward(getNearestEnemy())
